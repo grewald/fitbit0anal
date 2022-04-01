@@ -29,7 +29,7 @@ summStepsInt <- activity %>%  group_by(interval) %>%
 summStepsInt %>%  ggplot(aes(x= interval, y= meanPerInt)) + geom_line(color='blue') +
   theme_classic()
 
-# get the maximum averge step time interval
+# get the maximum average step time interval
 
 maxPerInt <- summStepsInt %>% filter(meanPerInt== max(meanPerInt))
 
@@ -46,7 +46,7 @@ summStepsInt2 <- activity %>%  group_by(interval) %>%
 #2- replace missing with median value
 
 activityImputed <- activity %>% left_join(summStepsInt2 , by= c("interval")) %>% 
-  mutate(steps=ifelse(is.na(steps),medianPerInt, steps )) %>% select(-c(medianPerInt))
+  mutate(steps=if_else(is.na(steps),medianPerInt, steps )) %>% select(-c(medianPerInt))
 
 ###############
 # repeat above steps using the imputed data
@@ -68,3 +68,23 @@ summSteps <- activityImputed %>%  group_by(date) %>%
 
 summSteps$meanPerDay[1]
 summSteps$medianPerDay[1]
+
+######
+
+# add forcat
+
+activityDay <- activity %>% mutate(day=as.factor(if_else(
+  weekdays(date) %in% c("Monday" ,   "Tuesday"  , "Wednesday", "Thursday" , "Friday"), "Weekday", "Weekend" )))
+
+activityDay2 <- activityDay %>%  mutate(day=factor(day, levels=c("Weekend", "Weekday")))
+str(activityDay)
+str(activityDay2)
+
+# derive mean and median steps per 5 minute interval 
+summStepsInt <- activityDay %>%  group_by(interval, day) %>% 
+  summarise(TotalSteps= sum(steps, na.rm = TRUE),meanPerInt= mean(steps, na.rm = TRUE)) 
+
+#plot average steps across the time points
+summStepsInt %>%  ggplot(aes(x= interval, y= meanPerInt, color=day)) + geom_line() +
+  theme_classic()
+
