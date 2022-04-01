@@ -126,7 +126,7 @@ missing_rec$n
 ```
 
 Replace missing with median values 
-```{r}
+```{r, message=FALSE}
 # replace the missing steps for the interval by median steps for that interval
 #1- calculate the median steps per interval
 summStepsInt2 <- activity %>%  group_by(interval) %>% 
@@ -152,7 +152,7 @@ TotalSteps %>%  ggplot(aes(x= TotalSteps)) +
 ```
 Mean and Median of imputed data
 
-```{r}
+```{r, message=FALSE}
 # derive mean and median steps per day 
 summSteps <- activityImputed %>%  group_by(date) %>% 
   summarise(TotalSteps= sum(steps, na.rm = TRUE)) %>% ungroup() %>% 
@@ -167,7 +167,7 @@ summSteps$medianPerDay[1]
 ## Analyse Weekend Vs Weekdays
 
 1. add factor column for type of Day- Weekday or Weekend and derive data for plot
-```{r}
+```{r, message=FALSE}
 
 # add factor
 activityDay <- activity %>% mutate(day=as.factor(if_else(

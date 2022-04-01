@@ -437,9 +437,8 @@ missing_rec$n</code></pre>
 <pre class="r"><code># replace the missing steps for the interval by median steps for that interval
 #1- calculate the median steps per interval
 summStepsInt2 &lt;- activity %&gt;%  group_by(interval) %&gt;% 
-  summarise(medianPerInt= median(steps, na.rm = TRUE)) </code></pre>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre class="r"><code>#2- replace missing with median value
+  summarise(medianPerInt= median(steps, na.rm = TRUE)) 
+#2- replace missing with median value
 
 activityImputed &lt;- activity %&gt;% left_join(summStepsInt2 , by= c(&quot;interval&quot;)) %&gt;% 
   mutate(steps=if_else(is.na(steps),medianPerInt, steps )) %&gt;% select(-c(medianPerInt))</code></pre>
@@ -457,9 +456,9 @@ TotalSteps %&gt;%  ggplot(aes(x= TotalSteps)) +
 <pre class="r"><code># derive mean and median steps per day 
 summSteps &lt;- activityImputed %&gt;%  group_by(date) %&gt;% 
   summarise(TotalSteps= sum(steps, na.rm = TRUE)) %&gt;% ungroup() %&gt;% 
-  mutate(allSteps = sum(TotalSteps),meanPerDay= mean(TotalSteps), medianPerDay= median(TotalSteps))</code></pre>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre class="r"><code>summSteps$meanPerDay[1]</code></pre>
+  mutate(allSteps = sum(TotalSteps),meanPerDay= mean(TotalSteps), medianPerDay= median(TotalSteps))
+
+summSteps$meanPerDay[1]</code></pre>
 <pre><code>## [1] 9503.869</code></pre>
 <pre class="r"><code>summSteps$medianPerDay[1]</code></pre>
 <pre><code>## [1] 10395</code></pre>
@@ -478,7 +477,6 @@ activityDay &lt;- activity %&gt;% mutate(day=as.factor(if_else(
 # derive mean and median steps per 5 minute interval 
 summStepsInt &lt;- activityDay %&gt;%  group_by(interval, day) %&gt;% 
   summarise(TotalSteps= sum(steps, na.rm = TRUE),meanPerInt= mean(steps, na.rm = TRUE)) </code></pre>
-<pre><code>## `summarise()` regrouping output by &#39;interval&#39; (override with `.groups` argument)</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Display plot</li>
 </ol>
